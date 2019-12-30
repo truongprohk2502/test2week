@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Grid</title>
+    <style>
+        .grid {
+            display: grid;
+        }
+
+        .cell {
+            height: 60px;
+            border: 1px solid black;
+            line-height: 60px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .header {
+            cursor: pointer;
+            transition: all 0.5s;
+            background-color: greenyellow;
+        }
+
+        .header:hover {
+            background-color: rgb(137, 204, 35);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid"></div>
+
+    <script>
+        let n = 100; // row
+        const m = 10; // col
+        const grid = document.querySelector('.grid');
+        let arr = [];
+
+        for (let i = 0; i < n; i++) {
+            let tmp = [];
+            for (let j = 0; j < m; j++) {
+                tmp.push(Math.round(1000 * Math.random()));
+            }
+            arr.push(tmp);
+        }
+
+        function drawGrid() {
+            let html = '';
+            let css = '';
+            for (let i = 0; i < m; i++) {
+                html += `<div class="cell header" data-col="${i}">Col ${i + 1}</div>`;
+                css += '60px ';
+            }
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < m; j++) {
+                    html += `<div class="cell">${arr[i][j]}</div>`;
+                }
+            }
+
+            grid.innerHTML = html;
+            grid.style.gridTemplateColumns = css;
+        }
+
+        drawGrid();
+        addEventHeader();
+
+        function addEventHeader() {
+            grid.querySelectorAll('.header').forEach(header => header.addEventListener('click', (e) => {
+                let col = parseInt(e.target.dataset.col);
+                arr = arr.sort((a, b) => a[col] > b[col] ? 1 : -1);
+                drawGrid();
+                addEventHeader();
+            }));
+        }
+
+        window.onscroll = function () {
+            var d = document.documentElement;
+            var offset = Math.round(d.scrollTop + window.innerHeight);
+            var height = d.offsetHeight;
+
+            if (offset === height) {
+                for (let i = 0; i < n; i++) {
+                    let tmp = [];
+                    for (let j = 0; j < m; j++) {
+                        tmp.push(Math.round(1000 * Math.random()));
+                    }
+                    arr.push(tmp);
+                }
+                n = arr.length;
+                drawGrid();
+                addEventHeader();
+            }
+        };
+    </script>
+</body>
+
+</html>

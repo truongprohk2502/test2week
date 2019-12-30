@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snake</title>
+    <style>
+        .grid {
+            display: grid;
+        }
+
+        .cell {
+            height: 30px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid"></div>
+
+    <script>
+        const n = 20;
+        const grid = document.querySelector('.grid');
+        let direction = 'right';
+
+        const apple = { row: 10, col: 14 };
+
+        const snake = {
+            head: { row: 10, col: 10 },
+            body: [],
+            directionTail: 'right',
+            move: function (direction) {
+                if (direction === 'right') {
+                    if (this.body.length !== 0) {
+                        let oldRow = this.body[this.body.length - 1].row;
+                        let oldCol = this.body[this.body.length - 1].col;
+                        for (let i = this.body.length - 1; i >= 0; i--) {
+                            if (i === 0) {
+                                this.body[i].row = this.head.row;
+                                this.body[i].col = this.head.col;
+                            } else {
+                                this.body[i].row = this.body[i - 1].row;
+                                this.body[i].col = this.body[i - 1].col;
+                            }
+                        }
+                        let newRow = this.body[this.body.length - 1].row;
+                        let newCol = this.body[this.body.length - 1].col;
+
+                        if (newCol - oldCol === 1) {
+                            this.directionTail = 'right';
+                        } else if (newCol - oldCol === -1) {
+                            this.directionTail = 'left';
+                        } else if (newRow - oldRow === 1) {
+                            this.directionTail = 'down';
+                        } else if (newRow - oldRow === -1) {
+                            this.directionTail = 'up';
+                        }
+                    } else {
+                        this.directionTail = 'right';
+                    }
+
+                    this.head.col++;
+                    if (this.head.col >= 20) {
+                        this.head.col = 0;
+                    }
+                    for (let i = 0; i < this.body.length; i++) {
+                        if (this.body[i].col >= 20) {
+                            this.body[i].col = 0;
+                        }
+                    }
+                } else if (direction === 'left') {
+                    if (this.body.length !== 0) {
+                        let oldRow = this.body[this.body.length - 1].row;
+                        let oldCol = this.body[this.body.length - 1].col;
+                        for (let i = this.body.length - 1; i >= 0; i--) {
+                            if (i === 0) {
+                                this.body[i].row = this.head.row;
+                                this.body[i].col = this.head.col;
+                            } else {
+                                this.body[i].row = this.body[i - 1].row;
+                                this.body[i].col = this.body[i - 1].col;
+                            }
+                        }
+                        let newRow = this.body[this.body.length - 1].row;
+                        let newCol = this.body[this.body.length - 1].col;
+
+                        if (newCol - oldCol === 1) {
+                            this.directionTail = 'right';
+                        } else if (newCol - oldCol === -1) {
+                            this.directionTail = 'left';
+                        } else if (newRow - oldRow === 1) {
+                            this.directionTail = 'down';
+                        } else if (newRow - oldRow === -1) {
+                            this.directionTail = 'up';
+                        }
+                    } else {
+                        this.directionTail = 'left';
+                    }
+
+                    this.head.col--;
+                    if (this.head.col < 0) {
+                        this.head.col = 19;
+                    }
+                    for (let i = 0; i < this.body.length; i++) {
+                        if (this.body[i].col < 0) {
+                            this.body[i].col = 19;
+                        }
+                    }
+                } else if (direction === 'up') {
+                    if (this.body.length !== 0) {
+                        let oldRow = this.body[this.body.length - 1].row;
+                        let oldCol = this.body[this.body.length - 1].col;
+                        for (let i = this.body.length - 1; i >= 0; i--) {
+                            if (i === 0) {
+                                this.body[i].row = this.head.row;
+                                this.body[i].col = this.head.col;
+                            } else {
+                                this.body[i].row = this.body[i - 1].row;
+                                this.body[i].col = this.body[i - 1].col;
+                            }
+                        }
+                        let newRow = this.body[this.body.length - 1].row;
+                        let newCol = this.body[this.body.length - 1].col;
+
+                        if (newCol - oldCol === 1) {
+                            this.directionTail = 'right';
+                        } else if (newCol - oldCol === -1) {
+                            this.directionTail = 'left';
+                        } else if (newRow - oldRow === 1) {
+                            this.directionTail = 'down';
+                        } else if (newRow - oldRow === -1) {
+                            this.directionTail = 'up';
+                        }
+                    } else {
+                        this.directionTail = 'up';
+                    }
+
+                    this.head.row--;
+                    if (this.head.row < 0) {
+                        this.head.row = 19;
+                    }
+                    for (let i = 0; i < this.body.length; i++) {
+                        if (this.body[i].row < 0) {
+                            this.body[i].row = 19;
+                        }
+                    }
+                } else if (direction === 'down') {
+                    if (this.body.length !== 0) {
+                        let oldRow = this.body[this.body.length - 1].row;
+                        let oldCol = this.body[this.body.length - 1].col;
+                        for (let i = this.body.length - 1; i >= 0; i--) {
+                            if (i === 0) {
+                                this.body[i].row = this.head.row;
+                                this.body[i].col = this.head.col;
+                            } else {
+                                this.body[i].row = this.body[i - 1].row;
+                                this.body[i].col = this.body[i - 1].col;
+                            }
+                        }
+                        let newRow = this.body[this.body.length - 1].row;
+                        let newCol = this.body[this.body.length - 1].col;
+
+                        if (newCol - oldCol === 1) {
+                            this.directionTail = 'right';
+                        } else if (newCol - oldCol === -1) {
+                            this.directionTail = 'left';
+                        } else if (newRow - oldRow === 1) {
+                            this.directionTail = 'down';
+                        } else if (newRow - oldRow === -1) {
+                            this.directionTail = 'up';
+                        }
+                    } else {
+                        this.directionTail = 'down';
+                    }
+
+                    this.head.row++;
+                    if (this.head.row >= 20) {
+                        this.head.row = 0;
+                    }
+                    for (let i = 0; i < this.body.length; i++) {
+                        if (this.body[i].row >= 20) {
+                            this.body[i].row = 0;
+                        }
+                    }
+                }
+            }
+        };
+
+        function drawGrid() {
+            for (let i = 0; i < n * n; i++) {
+                grid.querySelector(`[data-cell="${i}"]`).style.backgroundColor = 'unset';
+            }
+            const head = grid.querySelector(`[data-cell="${snake.head.row * n + snake.head.col}"]`);
+            const appleCell = grid.querySelector(`[data-cell="${apple.row * n + apple.col}"]`);
+            head.style.backgroundColor = 'black';
+            appleCell.style.backgroundColor = 'green';
+            snake.body.forEach(cell => grid.querySelector(`[data-cell="${cell.row * n + cell.col}"]`).style.backgroundColor = 'red');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.code === 'ArrowUp' && (direction === 'left' || direction === 'right')) {
+                direction = 'up';
+                drawGrid();
+            } else if (e.code === 'ArrowDown' && (direction === 'left' || direction === 'right')) {
+                direction = 'down';
+                drawGrid();
+            } else if (e.code === 'ArrowLeft' && (direction === 'up' || direction === 'down')) {
+                direction = 'left';
+                drawGrid();
+            } else if (e.code === 'ArrowRight' && (direction === 'up' || direction === 'down')) {
+                direction = 'right';
+                drawGrid();
+            }
+        });
+
+        let html = '';
+        let gridCss = '';
+        for (let i = 0; i < n; i++) {
+            gridCss += '30px ';
+        }
+        for (let i = 0; i < n * n; i++) {
+            html += `<div class="cell" data-cell="${i}"></div>`;
+        }
+        grid.style.gridTemplateColumns = gridCss;
+        grid.innerHTML = html;
+
+        drawGrid();
+
+        function checkFinish() {
+            snake.body.forEach(cell => {
+                if (cell.row === snake.head.row && cell.col === snake.head.col) {
+                    clearInterval(interval);
+                    alert('Finished');
+                    location.reload();
+                }
+            })
+        }
+
+        const interval = setInterval(() => {
+            snake.move(direction);
+            checkFinish();
+            if (snake.head.row === apple.row && snake.head.col === apple.col) {
+                while (true) {
+                    let row = Math.round(Math.random() * 19);
+                    let col = Math.round(Math.random() * 19);
+                    let foundNewApple = true;
+                    if (snake.head.row === row && snake.head.col === col) {
+                        foundNewApple = false;
+                    }
+                    snake.body.forEach(cell => {
+                        if (cell.row === row && cell.col === col) {
+                            foundNewApple = false;
+                        }
+                    });
+                    if (foundNewApple) {
+                        apple.row = row;
+                        apple.col = col;
+                        let rowTail;
+                        let colTail;
+                        if (snake.directionTail === 'up') {
+                            if (snake.body.length !== 0) {
+                                rowTail = snake.body[snake.body.length - 1].row + 1;
+                                colTail = snake.body[snake.body.length - 1].col;
+                            } else {
+                                rowTail = snake.head.row + 1;
+                                colTail = snake.head.col;
+                            }
+                        } else if (snake.directionTail === 'down') {
+                            if (snake.body.length !== 0) {
+                                rowTail = snake.body[snake.body.length - 1].row - 1;
+                                colTail = snake.body[snake.body.length - 1].col;
+                            } else {
+                                rowTail = snake.head.row - 1;
+                                colTail = snake.head.col;
+                            }
+                        } else if (snake.directionTail === 'left') {
+                            if (snake.body.length !== 0) {
+                                rowTail = snake.body[snake.body.length - 1].row;
+                                colTail = snake.body[snake.body.length - 1].col + 1;
+                            } else {
+                                rowTail = snake.head.row;
+                                colTail = snake.head.col + 1;
+                            }
+                        } else if (snake.directionTail === 'right') {
+                            if (snake.body.length !== 0) {
+                                rowTail = snake.body[snake.body.length - 1].row;
+                                colTail = snake.body[snake.body.length - 1].col - 1;
+                            } else {
+                                rowTail = snake.head.row;
+                                colTail = snake.head.col - 1;
+                            }
+                        }
+                        snake.body.push({ row: rowTail, col: colTail });
+                        break;
+                    }
+                }
+            }
+            drawGrid();
+        }, 1000);
+
+    </script>
+</body>
+
+</html>

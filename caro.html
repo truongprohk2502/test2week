@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Caro</title>
+    <style>
+        .grid {
+            display: grid;
+        }
+
+        .cell {
+            height: 40px;
+            border: 1px solid black;
+            line-height: 40px;
+            text-align: center;
+            font-size: 40px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid"></div>
+
+    <script>
+        const grid = document.querySelector('.grid');
+        let player = 'X';
+        let checks = [];
+        const num = 10;
+        const m = 5;
+
+        let html = '';
+        let gridCss = '';
+        for (let i = 0; i < num; i++) {
+            gridCss += '40px ';
+        }
+        for (let i = 0; i < num * num; i++) {
+            html += `<div class="cell" data-cell="${i}"></div>`;
+        }
+        grid.style.gridTemplateColumns = gridCss;
+        grid.innerHTML = html;
+
+        for (let i = 0; i < num; i++) {
+            let arr = [];
+            for (let j = 0; j < num; j++) {
+                arr.push('none');
+            }
+            checks.push(arr);
+        }
+
+        function clickCell(e) {
+            let index = parseInt(e.target.dataset.cell);
+            let i = Math.floor(index / num);
+            let j = index % num;
+            if (checks[i][j] === 'none') {
+                checks[i][j] = player;
+                player = (player === 'X') ? 'O' : 'X';
+                setStatus(checks);
+                checkFinish(checks, i, j);
+            }
+        }
+
+        const cells = grid.querySelectorAll('.cell');
+        cells.forEach(cell => cell.addEventListener('click', clickCell));
+
+        function setStatus(checks) {
+            for (let i = 0; i < num; i++) {
+                for (j = 0; j < num; j++) {
+                    let index = num * i + j;
+                    if (checks[i][j] !== 'none') {
+                        document.querySelector(`[data-cell="${index}"]`).innerHTML = checks[i][j];
+                    }
+                }
+            }
+        }
+
+        function checkFinish(checks, i, j) {
+            if (checkVertical(checks, i, j) !== 'not finish') {
+                alert(checkVertical(checks, i, j));
+                cells.forEach(cell => cell.removeEventListener('click', clickCell));
+            } else if (checkHorizontal(checks, i, j) !== 'not finish') {
+                cells.forEach(cell => cell.removeEventListener('click', clickCell));
+                alert(checkHorizontal(checks, i, j));
+                cells.forEach(cell => cell.removeEventListener('click', clickCell));
+            } else if (checkDiagonal(checks, i, j) !== 'not finish') {
+                alert(checkDiagonal(checks, i, j));
+            } else if (checkAntiDiagonal(checks, i, j) !== 'not finish') {
+                cells.forEach(cell => cell.removeEventListener('click', clickCell));
+                alert(checkAntiDiagonal(checks, i, j));
+            }
+        }
+
+        function checkVertical(checks, row, col) {
+            let s = checks[row][col];
+            let t = 1;
+            if (row > 0) {
+                for (let i = row - 1; i >= 0; i--) {
+                    if (checks[i][col] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (row < num - 1) {
+                for (let i = row + 1; i < num; i++) {
+                    if (checks[i][col] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (t === m) {
+                grid.querySelector(`[data-cell="${row * num + col}"]`).style.backgroundColor = 'yellow';
+                for (let i = row - 1; i >= 0; i--) {
+                    if (checks[i][col] === s) {
+                        grid.querySelector(`[data-cell="${i * num + col}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                for (let i = row + 1; i < num; i++) {
+                    if (checks[i][col] === s) {
+                        grid.querySelector(`[data-cell="${i * num + col}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                return 'Player ' + s + ' win';
+            }
+
+            let notEqual = false;
+            for (let i = 0; i < num; i++) {
+                for (let j = 0; j < num; j++) {
+                    if (checks[i][j] === 'none') {
+                        notEqual = true;
+                        break;
+                    }
+                }
+            }
+            if (!notEqual) {
+                return 'Equal';
+            }
+            return 'not finish';
+        }
+
+        function checkHorizontal(checks, row, col) {
+            let s = checks[row][col];
+            let t = 1;
+            if (col > 0) {
+                for (let i = col - 1; i >= 0; i--) {
+                    if (checks[row][i] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (col < num - 1) {
+                for (let i = col + 1; i < num; i++) {
+                    if (checks[row][i] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (t === m) {
+                grid.querySelector(`[data-cell="${row * num + col}"]`).style.backgroundColor = 'yellow';
+                for (let i = col - 1; i >= 0; i--) {
+                    if (checks[row][i] === s) {
+                        grid.querySelector(`[data-cell="${row * num + i}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                for (let i = col + 1; i < num; i++) {
+                    if (checks[row][i] === s) {
+                        grid.querySelector(`[data-cell="${row * num + i}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                return 'Player ' + s + ' win';
+            }
+
+            let notEqual = false;
+            for (let i = 0; i < num; i++) {
+                for (let j = 0; j < num; j++) {
+                    if (checks[i][j] === 'none') {
+                        notEqual = true;
+                        break;
+                    }
+                }
+            }
+            if (!notEqual) {
+                return 'Equal';
+            }
+            return 'not finish';
+        }
+
+        function checkDiagonal(checks, row, col) {
+            let s = checks[row][col];
+            let t = 1;
+            if (col > 0 && row > 0) {
+                let i = row;
+                let j = col;
+                while (i > 0 && j > 0) {
+                    i--;
+                    j--;
+                    if (checks[i][j] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (col < num - 1 && row < num - 1) {
+                let i = row;
+                let j = col;
+                while (i < num - 1 && j < num - 1) {
+                    i++;
+                    j++;
+                    if (checks[i][j] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+
+            if (t === m) {
+                grid.querySelector(`[data-cell="${row * num + col}"]`).style.backgroundColor = 'yellow';
+                let i = row;
+                let j = col;
+                while (i >= 0 && j >= 0) {
+                    i--;
+                    j--;
+                    if (checks[i][j] === s) {
+                        grid.querySelector(`[data-cell="${i * num + j}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                while (i < num && j < num) {
+                    i++;
+                    j++;
+                    if (checks[i][j] === s) {
+                        grid.querySelector(`[data-cell="${num * i + j}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                return 'Player ' + s + ' win';
+            }
+
+            let notEqual = false;
+            for (let i = 0; i < num; i++) {
+                for (let j = 0; j < num; j++) {
+                    if (checks[i][j] === 'none') {
+                        notEqual = true;
+                        break;
+                    }
+                }
+            }
+            if (!notEqual) {
+                return 'Equal';
+            }
+            return 'not finish';
+        }
+
+        function checkAntiDiagonal(checks, row, col) {
+            let s = checks[row][col];
+            let t = 1;
+            if (col < num - 1 && row > 0) {
+                let i = row;
+                let j = col;
+                while (i > 0 && j < num - 1) {
+                    i--;
+                    j++;
+                    if (checks[i][j] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if (col > 0 && row < num - 1) {
+                let i = row;
+                let j = col;
+                while (i < num - 1 && j > 0) {
+                    i++;
+                    j--;
+                    if (checks[i][j] === s) {
+                        t++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+
+            if (t === m) {
+                grid.querySelector(`[data-cell="${row * num + col}"]`).style.backgroundColor = 'yellow';
+                let i = row;
+                let j = col;
+                while (i >= 0 && j < num) {
+                    i--;
+                    j++;
+                    if (checks[i][j] === s) {
+                        grid.querySelector(`[data-cell="${i * num + j}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                while (i < num && j >= 0) {
+                    i++;
+                    j--;
+                    if (checks[i][j] === s) {
+                        grid.querySelector(`[data-cell="${num * i + j}"]`).style.backgroundColor = 'yellow';
+                    } else {
+                        break;
+                    }
+                }
+                return 'Player ' + s + ' win';
+            }
+
+            let notEqual = false;
+            for (let i = 0; i < num; i++) {
+                for (let j = 0; j < num; j++) {
+                    if (checks[i][j] === 'none') {
+                        notEqual = true;
+                        break;
+                    }
+                }
+            }
+            if (!notEqual) {
+                return 'Equal';
+            }
+            return 'not finish';
+        }
+
+    </script>
+</body>
+
+</html>
